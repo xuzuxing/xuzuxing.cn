@@ -30,7 +30,7 @@ export function FlipLogo({
   size = 40,
   color = "currentColor",
   mode = "hover",
-  label = "Khaled Saeed",
+  label = "Xu Zuxing",
   className,
   style,
 }: FlipLogoProps) {

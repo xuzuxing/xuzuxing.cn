@@ -9,17 +9,17 @@ export type SocialLink = {
 }
 
 export const siteConfig = {
-  name: "Khaled Saeed",
+  name: "Xu Zuxing",
   /** Short role used in the title tag and OG. */
   role: "Full-Stack Engineer",
-  url: "https://khaledsaeed.tech",
-  location: "Lebanon",
+  url: "https://xuzuxing.cn",
+  location: "Nanning",
   twitterHandle: "@KhaleddSaeed18",
   /** Cal.com booking link (open-source Calendly alternative). Replace with your own handle. */
   bookingUrl: "https://cal.com/khaledsaeed",
   /** ~155 chars, no em dashes, no emoji. */
   description:
-    "Khaled Saeed is a full-stack engineer from Lebanon building pixel-perfect interfaces, backend systems, and developer tooling in TypeScript and Node.js.",
+    "Xu Zuxing is a full-stack engineer from Lebanon building pixel-perfect interfaces, backend systems, and developer tooling in TypeScript and Node.js.",
   intro:
     "I build across the full stack: pixel-perfect interfaces on the frontend, solid backend systems, and developer tooling in TypeScript and Node.js. I care about clean design on both sides of the wire.",
   /** Roles cycled by the rolling text. Sentence case, lowercase per brand. */
@@ -50,44 +50,44 @@ export const socialLinks: SocialLink[] = [
   {
     key: "github",
     label: "GitHub",
-    handle: "KhaledSaeed18",
-    href: "https://github.com/KhaledSaeed18",
+    handle: "xuzuxing",
+    href: "https://github.com/xuzuxing",
   },
-  {
-    key: "linkedin",
-    label: "LinkedIn",
-    handle: "khaled-s-saeed",
-    href: "https://www.linkedin.com/in/khaled-s-saeed/",
-  },
-  {
-    key: "x",
-    label: "X",
-    handle: "@KhaleddSaeed18",
-    href: "https://x.com/KhaleddSaeed18",
-  },
-  {
-    key: "devto",
-    label: "DEV",
-    handle: "khaledsaeed18",
-    href: "https://dev.to/khaledsaeed18",
-  },
-  {
-    key: "instagram",
-    label: "Instagram",
-    handle: "khaledd.saeed",
-    href: "https://www.instagram.com/khaledd.saeed",
-  },
-  {
-    key: "discord",
-    label: "Discord",
-    handle: "khaledsaeed18",
-    href: "https://discord.com/users/1496301841774805004",
-  },
+//   {
+//     key: "linkedin",
+//     label: "LinkedIn",
+//     handle: "khaled-s-saeed",
+//     href: "https://www.linkedin.com/in/khaled-s-saeed/",
+//   },
+//   {
+//     key: "x",
+//     label: "X",
+//     handle: "@KhaleddSaeed18",
+//     href: "https://x.com/KhaleddSaeed18",
+//   },
+//   {
+//     key: "devto",
+//     label: "DEV",
+//     handle: "khaledsaeed18",
+//     href: "https://dev.to/khaledsaeed18",
+//   },
+//   {
+//     key: "instagram",
+//     label: "Instagram",
+//     handle: "khaledd.saeed",
+//     href: "https://www.instagram.com/khaledd.saeed",
+//   },
+//   {
+//     key: "discord",
+//     label: "Discord",
+//     handle: "khaledsaeed18",
+//     href: "https://discord.com/users/1496301841774805004",
+//   },
   {
     key: "email",
     label: "Email",
-    handle: "contact@khaledsaeed.tech",
-    href: "mailto:contact@khaledsaeed.tech",
+    handle: "zuxing.xu@lettered.cn",
+    href: "mailto:zuxing.xu@lettered.cn",
   },
 ]
 

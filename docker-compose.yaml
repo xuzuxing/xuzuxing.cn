@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # 构建时注入，NEXT_PUBLIC_* 必须在构建阶段传入
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    container_name: xuzuxing
+    restart: unless-stopped
+    ports:
+      - "${NEXT_APP_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production

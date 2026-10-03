@@ -1,10 +1,10 @@
-# khaledsaeed.tech
+# xuzuxing.cn
 
 Personal portfolio site, built with Next.js, React, TypeScript, and Tailwind CSS.
 
 ## What it is
 
-This project powers [khaledsaeed.tech](https://khaledsaeed.tech), a minimal portfolio focused on:
+This project powers [xuzuxing.cn](https://xuzuxing.cn), a minimal portfolio focused on:
 
 - full-stack engineering work
 - clean, polished UI details
