@@ -60,7 +60,6 @@ uniform int u_quality;     // 2 full, 1 no soft shadows, 0 also cheaper occlusio
 
 #define M_SKIN 1.0
 #define M_HAIR 2.0
-#define M_BEARD 3.0
 #define M_SHIRT 4.0
 #define M_FRAME 5.0
 #define M_BROW 6.0
@@ -91,11 +90,6 @@ float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
   return length(pa - ba * h) - r;
 }
 
-float sdRoundRect(vec2 p, vec2 b, float r) {
-  vec2 q = abs(p) - b + r;
-  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
-}
-
 vec2 opU(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
 
 // 4x4 Bayer threshold built from two nested 2x2 levels (no array lookups).
@@ -119,8 +113,8 @@ float faceShape(vec3 q, float sk) {
   // broad jaw
   d = smin(d, sdEllipsoid(q - vec3(0.0, 1.02, 0.1), vec3(0.74, 0.68, 0.78)), 0.32);
   // nose
-  float n = sdEllipsoid(q - vec3(0.0, 1.2, 0.85), vec3(0.11, 0.26, 0.15));
-  n = smin(n, sdEllipsoid(q - vec3(0.0, 1.04, 0.96), vec3(0.16, 0.12, 0.13)), 0.09);
+  float n = sdEllipsoid(q - vec3(0.0, 1.2, 0.83), vec3(0.085, 0.2, 0.115));
+  n = smin(n, sdEllipsoid(q - vec3(0.0, 1.05, 0.93), vec3(0.12, 0.095, 0.1)), 0.08);
   d = smin(d, n, 0.08);
   // ears
   vec3 e = vec3(abs(q.x), q.yz) - vec3(0.9, 1.28, -0.08);
@@ -128,45 +122,20 @@ float faceShape(vec3 q, float sk) {
   return d;
 }
 
-float hairline(vec3 q) {
-  // forehead at the front, above the ears on the sides, low at the nape
-  float ax = abs(q.x);
-  float line = mix(1.55, 1.9 + 0.1 * smoothstep(0.2, 0.55, ax), smoothstep(0.15, 0.8, q.z));
-  line = mix(line, 1.05, 1.0 - smoothstep(-0.8, -0.2, q.z));
-  float burn = smoothstep(0.66, 0.84, ax) * (1.0 - smoothstep(0.06, 0.2, abs(q.z - 0.2)));
-  return mix(line, 1.12, burn);
-}
-
-float hair(vec3 q, float sk) {
-  float line = hairline(q);
-  float top = smoothstep(1.6, 2.3, q.y);
-  // grows out of the skin at the hairline: short faded sides, volume on top
-  float grow = smoothstep(line - 0.02, line + 0.2, q.y);
-  float th = mix(0.025, 0.11, top) * grow;
-  // combed ridges running front to back, broken up into short tufts
-  float cl = 0.65 * sin(q.x * 24.0 + sin(q.z * 5.0) * 0.8) + 0.35 * sin(q.z * 17.0 + q.x * 6.0);
-  th += top * grow * 0.022 * cl;
-  float d = sk - th;
-  // swept-up front
-  float front = sdEllipsoid(q - vec3(0.0, 2.08, 0.38), vec3(0.58, 0.17, 0.4)) - 0.02 * cl;
-  d = smin(d, front, 0.2);
-  return smax(d, line - q.y, 0.04);
-}
-
-float beard(vec3 q, float face) {
-  float ax = abs(q.x);
-  // cheek line runs from the sideburns down to the mouth corners; the
-  // moustache sits as a band right under the nose
-  float line = mix(0.8, 1.32, smoothstep(0.28, 0.84, ax));
-  line = max(line, mix(0.955, 0.8, smoothstep(0.16, 0.3, ax)));
-  float th = mix(0.08, 0.03, smoothstep(0.3, 0.8, ax)) * mix(1.0, 0.6, smoothstep(0.85, 1.1, q.y));
-  th *= 0.35 + 0.65 * smoothstep(line + 0.01, line - 0.12, q.y);
-  float d = face - th - 0.014 * sin(q.x * 23.0) * sin(q.y * 19.0 + q.z * 7.0);
-  d = smax(d, q.y - line, 0.05);
-  d = smax(d, -0.02 - q.z, 0.05);
-  // opening for the lips
-  d = smax(d, -sdEllipsoid(q - vec3(0.0, 0.775, 0.92), vec3(0.15, 0.05, 0.2)), 0.025);
-  return d;
+// Big rounded afro: a bumpy ellipsoid halo around the skull, with the face
+// carved out of the front so the hairline frames the forehead.
+float hair(vec3 q) {
+  vec3 c = vec3(0.0, 1.72, -0.12);
+  vec3 r = vec3(1.16, 1.0, 1.1);
+  float d = sdEllipsoid(q - c, r);
+  // Layered sines read as tight curls / frizz on the silhouette.
+  float n =
+    sin(q.x * 23.0 + 0.3) * sin(q.y * 21.0 + 1.7) * sin(q.z * 27.0 + 0.4) +
+    0.5 * sin(q.x * 43.0 + 2.1) * sin(q.y * 37.0 + 0.5) * sin(q.z * 31.0 + 1.0);
+  d -= 0.085 * n;
+  // Carve the face out of the front of the volume.
+  float faceCut = sdEllipsoid(q - vec3(0.0, 1.26, 0.32), vec3(0.82, 0.92, 0.96));
+  return smax(d, -faceCut, 0.08);
 }
 
 float brows(vec3 q) {
@@ -192,14 +161,15 @@ float frames(vec3 q) {
   vec3 g = q - vec3(0.0, 1.32, 1.0);
   float ax = abs(g.x);
   g.z += 0.22 * ax * ax;             // wrap around the face
-  float r2 = sdRoundRect(lensUV(q), vec2(0.25, 0.185), 0.085);
-  vec2 w = vec2(abs(r2) - 0.028, abs(g.z) - 0.028);
-  float d = min(max(w.x, w.y), 0.0) + length(max(w, 0.0)) - 0.01;
-  // keyhole bridge
-  d = min(d, sdCapsule(g, vec3(-0.1, 0.07, 0.0), vec3(0.1, 0.07, 0.0), 0.03));
+  float r2 = length(lensUV(q)) - 0.21;   // round wire rims
+  // thin wire rims
+  vec2 w = vec2(abs(r2) - 0.024, abs(g.z) - 0.024);
+  float d = min(max(w.x, w.y), 0.0) + length(max(w, 0.0)) - 0.0055;
+  // bridge across to the round lenses
+  d = min(d, sdCapsule(g, vec3(-0.15, 0.07, 0.0), vec3(0.15, 0.07, 0.0), 0.016));
   // temples back to the ears
   vec3 t = vec3(ax, q.yz);
-  d = min(d, sdCapsule(t, vec3(0.62, 1.4, 0.9), vec3(0.93, 1.4, -0.1), 0.026));
+  d = min(d, sdCapsule(t, vec3(0.62, 1.4, 0.9), vec3(0.93, 1.4, -0.1), 0.015));
   return d;
 }
 
@@ -207,8 +177,7 @@ vec2 head(vec3 q) {
   float sk = skull(q);
   float face = faceShape(q, sk);
   vec2 h = vec2(face, M_SKIN);
-  h = opU(h, vec2(hair(q, sk), M_HAIR));
-  h = opU(h, vec2(beard(q, face), M_BEARD));
+  h = opU(h, vec2(hair(q), M_HAIR));
   h = opU(h, vec2(sdEllipsoid(q - vec3(0.0, 0.77, 0.86), vec3(0.13, 0.05, 0.075)), M_LIP));
   h = opU(h, vec2(brows(q), M_BROW));
   h = opU(h, vec2(frames(q), M_FRAME));
@@ -302,7 +271,7 @@ vec3 toHead(vec3 p) { return u_headInv * (p - PIVOT) / HS + PIVOT; }
 vec2 map(vec3 p) {
   vec2 r = body(p);
   vec3 q = toHead(p);
-  float bound = (length(q - vec3(0.0, 1.45, 0.05)) - 1.6) * HS;
+  float bound = (length(q - vec3(0.0, 1.45, 0.05)) - 1.75) * HS;
   if (bound > 0.2) return opU(r, vec2(bound, M_SKIN));
   vec2 h = head(q);
   return opU(r, vec2(h.x * HS, h.y));
@@ -392,7 +361,6 @@ void main() {
 
   float albedo = 0.7;
   if (m == M_HAIR) albedo = mix(0.42, 0.3, smoothstep(1.6, 2.2, q.y));
-  else if (m == M_BEARD) albedo = 0.34;
   else if (m == M_SHIRT) albedo = 0.36;
   else if (m == M_FRAME) albedo = 0.8;
   else if (m == M_BROW) albedo = 0.02;
@@ -443,7 +411,7 @@ void main() {
   if (tl > 0.0 && tl < t) {
     vec3 lp = hro + hrd * tl;
     vec2 c = lensUV(lp);
-    if (abs(lp.x) < 0.75 && sdRoundRect(c, vec2(0.25, 0.185), 0.085) < -0.028) {
+    if (abs(lp.x) < 0.75 && length(c) < 0.195) {
       float s = c.x * 0.8 + c.y;
       float g = u_glint - (lp.x > 0.0 ? 0.25 : 0.0);
       if (abs(s - g) < 0.05) decal = 1.0;
