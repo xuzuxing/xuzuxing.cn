@@ -1,11 +1,10 @@
-import { CalendarCheckIcon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
 import Link from "next/link"
 
 import { DitherCharacter } from "@/components/dither-character"
 import { FlipLogo } from "@/components/flip-logo"
 import { RollingText } from "@/components/rolling-text"
 import { SocialLinks } from "@/components/social-links"
+import { WechatQrPopover } from "@/components/wechat-qr-popover"
 import { siteConfig } from "@/lib/site"
 
 export default function Page() {
@@ -51,19 +50,7 @@ export default function Page() {
           </div>
 
           <div className="mt-5">
-            <a
-              href={siteConfig.bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group bg-secondary inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 font-mono text-xs tracking-wide text-muted-foreground transition-colors hover:border-brand/40 hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-            >
-              <HugeiconsIcon
-                icon={CalendarCheckIcon}
-                className="size-4 transition-colors group-hover:text-brand"
-                strokeWidth={1.6}
-              />
-              Book a call
-            </a>
+            <WechatQrPopover />
           </div>
         </div>
       </section>

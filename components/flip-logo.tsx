@@ -1,19 +1,16 @@
 import type { CSSProperties } from "react"
 
-type LogoState = "k" | "forward"
-
 interface FlipLogoProps {
   /** Pixel size of the square mark. Defaults to 40. */
   size?: number
   /** Stroke color. Defaults to currentColor so it inherits text color. */
   color?: string
   /**
-   * "hover"  — rests as K, flips to forward on hover/focus (default)
-   * "auto"   — rests as K, automatically flips to forward every ~3s and returns
-   * "k"      — static K
-   * "forward"— static forward glyph
+   * "hover"  — rests as X, spins 360deg on hover/focus (default)
+   * "auto"   — rests as X, automatically spins 360deg every ~5s
+   * "static" — static X, no motion
    */
-  mode?: "hover" | "auto" | LogoState
+  mode?: "hover" | "auto" | "static"
   /** Accessible label. */
   label?: string
   className?: string
@@ -21,10 +18,9 @@ interface FlipLogoProps {
 }
 
 /**
- * Flip-bracket K mark. A fixed vertical stem with a detached chevron beside it.
- * At rest it reads as "|<" (the letter K); flipped it reads as "|>" (forward/run).
- * The chevron is a single polyline mirrored via scaleX(-1) about its own center,
- * so both states share identical geometry.
+ * Rotating X mark: two diagonal strokes crossing at the centre. The whole
+ * glyph rotates about its own centre, so every 90deg it reads identically —
+ * the spin itself is the motion.
  */
 export function FlipLogo({
   size = 40,
@@ -34,7 +30,7 @@ export function FlipLogo({
   className,
   style,
 }: FlipLogoProps) {
-  const isStaticForward = mode === "forward"
+  const staticMode = mode === "static"
   const interactive = mode === "hover"
   const auto = mode === "auto"
 
@@ -51,61 +47,52 @@ export function FlipLogo({
       data-auto={auto ? "" : undefined}
     >
       <g
+        className={staticMode ? undefined : "logo-x"}
         fill="none"
         stroke={color}
         strokeWidth={11}
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <line x1={38} y1={28} x2={38} y2={72} />
-        <polyline
-          points="71,28 51,50 71,72"
-          className={interactive ? "flip-chevron" : auto ? "flip-chevron-auto" : undefined}
-          // Static modes set the transform inline; interactive mode must drive
-          // it from CSS so the :hover rule isn't outranked by an inline style.
-          style={
-            interactive || auto
-              ? undefined
-              : {
-                  transformBox: "fill-box",
-                  transformOrigin: "center",
-                  transform: isStaticForward ? "scaleX(-1)" : "scaleX(1)",
-                }
-          }
-        />
+        <line x1={28} y1={28} x2={72} y2={72} />
+        <line x1={72} y1={28} x2={28} y2={72} />
       </g>
       {interactive && (
         <style>{`
-          .flip-chevron {
+          .logo-x {
             transform-box: fill-box;
             transform-origin: center;
-            transform: scaleX(1);
-            transition: transform 420ms cubic-bezier(0.65, 0, 0.35, 1);
           }
-          svg[data-interactive]:hover .flip-chevron,
-          svg[data-interactive]:focus-visible .flip-chevron { transform: scaleX(-1); }
+          svg[data-interactive]:hover .logo-x,
+          svg[data-interactive]:focus-visible .logo-x {
+            animation: logo-spin 650ms cubic-bezier(0.65, 0, 0.35, 1);
+          }
+          @keyframes logo-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+          }
           @media (prefers-reduced-motion: reduce) {
-            .flip-chevron { transition: none; }
+            svg[data-interactive]:hover .logo-x,
+            svg[data-interactive]:focus-visible .logo-x { animation: none; }
           }
         `}</style>
       )}
       {auto && (
         <style>{`
-          @keyframes logo-flip {
-            0%   { transform: scaleX(1); }
-            14%  { transform: scaleX(-1); }
-            40%  { transform: scaleX(-1); }
-            54%  { transform: scaleX(1); }
-            100% { transform: scaleX(1); }
-          }
-          .flip-chevron-auto {
+          .logo-x {
             transform-box: fill-box;
             transform-origin: center;
-            transform: scaleX(1);
-            animation: logo-flip 5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+          }
+          @keyframes logo-spin-cycle {
+            0%   { transform: rotate(0deg); }
+            12%  { transform: rotate(360deg); }
+            100% { transform: rotate(360deg); }
+          }
+          .logo-x {
+            animation: logo-spin-cycle 5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
           }
           @media (prefers-reduced-motion: reduce) {
-            .flip-chevron-auto { animation: none; }
+            .logo-x { animation: none; }
           }
         `}</style>
       )}

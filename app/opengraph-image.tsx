@@ -36,8 +36,8 @@ export default function OpengraphImage() {
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <line x1={38} y1={28} x2={38} y2={72} />
-              <polyline points="70,28 50,50 70,72" />
+              <line x1={28} y1={28} x2={72} y2={72} />
+              <line x1={72} y1={28} x2={28} y2={72} />
             </g>
           </svg>
         </div>

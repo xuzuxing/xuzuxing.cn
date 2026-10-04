@@ -15,8 +15,8 @@ export const siteConfig = {
   url: "https://xuzuxing.cn",
   location: "Nanning",
   twitterHandle: "@KhaleddSaeed18",
-  /** Cal.com booking link (open-source Calendly alternative). Replace with your own handle. */
-  bookingUrl: "https://cal.com/khaledsaeed",
+  /** WeChat contact QR shown in the "Wechat Me" popover. Drop your exported QR image in /public. */
+  wechatQrImage: "/wechat-qr.png",
   /** ~155 chars, no em dashes, no emoji. */
   description:
     "Xu Zuxing is a full-stack engineer from Lebanon building pixel-perfect interfaces, backend systems, and developer tooling in TypeScript and Node.js.",
