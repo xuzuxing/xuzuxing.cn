@@ -1,8 +1,10 @@
 import { ImageResponse } from "next/og"
 
+import { en } from "./dictionaries/en"
 import { siteConfig } from "@/lib/site"
 
-export const alt = `${siteConfig.name} — ${siteConfig.role}`
+// Single English social card (next/og default fonts have no CJK glyphs).
+export const alt = `${en.site.name} — ${en.site.role}`
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -52,7 +54,7 @@ export default function OpengraphImage() {
               lineHeight: 1,
             }}
           >
-            {siteConfig.name}
+            {en.site.name}
           </div>
           <div
             style={{
@@ -63,9 +65,9 @@ export default function OpengraphImage() {
               color: accent,
             }}
           >
-            {siteConfig.role.toLowerCase()}
+            {en.site.role.toLowerCase()}
             <span style={{ color: muted, margin: "0 16px" }}>/</span>
-            <span style={{ color: muted }}>{siteConfig.location}</span>
+            <span style={{ color: muted }}>{en.site.location}</span>
           </div>
         </div>
 

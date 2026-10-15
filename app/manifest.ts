@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next"
 
-import { siteConfig } from "@/lib/site"
+import { en } from "@/app/[lang]/dictionaries/en"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${siteConfig.name} — ${siteConfig.role}`,
-    short_name: siteConfig.name,
-    description: siteConfig.description,
+    name: `${en.site.name} — ${en.site.role}`,
+    short_name: en.site.name,
+    description: en.site.description,
     start_url: "/",
     display: "standalone",
     background_color: "#1A1715",

@@ -122,3 +122,20 @@
     color: var(--brand-foreground);
     }
 }
+
+/* Print: the dark theme would waste ink and read poorly on paper, so switch
+   to a light palette and strip decoration when printing (resume page). */
+@media print {
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.2393 0.0056 48.65);
+    --card: oklch(1 0 0);
+    --muted-foreground: oklch(0.4460 0.0110 70);
+    --border: oklch(0.9232 0.0029 48.72);
+    --brand: oklch(0.5287 0.1342 33.42);
+  }
+
+  body {
+    background: white !important;
+  }
+}

@@ -11,7 +11,14 @@ import { siteConfig } from "@/lib/site"
 const OPEN_DELAY = 120
 const CLOSE_DELAY = 160
 
-export function WechatQrPopover() {
+export type WechatQrLabels = {
+  trigger: string
+  triggerAria: string
+  hint: string
+  qrAlt: string
+}
+
+export function WechatQrPopover({ labels }: { labels: WechatQrLabels }) {
   const [open, setOpen] = React.useState(false)
   const openTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
   const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -48,7 +55,7 @@ export function WechatQrPopover() {
         onBlur={scheduleClose}
       >
         <PopoverTrigger
-          aria-label="Show my WeChat QR code"
+          aria-label={labels.triggerAria}
           onClick={(event) => {
             if (event.currentTarget.getAttribute("data-state") === "open") {
               suppressUntil.current = Date.now() + OPEN_DELAY + 200
@@ -61,7 +68,7 @@ export function WechatQrPopover() {
             className="size-4 transition-colors group-hover:text-brand group-data-[state=open]:text-brand"
             strokeWidth={1.6}
           />
-          Wechat Me
+          {labels.trigger}
         </PopoverTrigger>
       </span>
       <PopoverContent
@@ -76,14 +83,14 @@ export function WechatQrPopover() {
           <div className="rounded-md bg-white p-2">
             <Image
               src={siteConfig.wechatQrImage}
-              alt={`${siteConfig.name} WeChat QR code`}
+              alt={labels.qrAlt}
               width={200}
               height={200}
               unoptimized
             />
           </div>
           <p className="text-center font-mono text-xs tracking-wide text-muted-foreground">
-            Scan to add me on WeChat
+            {labels.hint}
           </p>
         </div>
       </PopoverContent>
