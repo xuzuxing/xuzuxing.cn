@@ -95,3 +95,59 @@ export const socialLinks: SocialLink[] = [
 export const sameAs = socialLinks
   .filter((l) => l.key !== "email")
   .map((l) => l.href)
+
+/** Primary navigation rendered in the site header. */
+export const navItems = [
+  { label: "About", href: "/about" },
+  { label: "Projects", href: "/project" },
+  { label: "Links", href: "/link" },
+] as const
+
+export type ProjectItem = {
+  name: string
+  description: string
+  href: string
+  tags: string[]
+}
+
+/** Project showcase. */
+export const projects: ProjectItem[] = [
+  {
+    name: "Certeasy",
+    description:
+      "One-stop SSL certificate service: automated issuance, deployment sync to cloud resources, and expiry monitoring with alerts.",
+    href: "https://www.certeasy.cn",
+    tags: ["SSL", "Automation", "SaaS"],
+  },
+  {
+    name: "Beaconix",
+    description: "A new project currently in the works. Details coming soon.",
+    href: "https://beaconix.app",
+    tags: [],
+  },
+]
+
+export type FriendLink = {
+  name: string
+  description: string
+  href: string
+}
+
+/** Friend links (blogroll). */
+export const friendLinks: FriendLink[] = [
+  {
+    name: "Certeasy",
+    description: "One-stop SSL certificate service with automated issuance, deployment, and monitoring.",
+    href: "https://www.certeasy.cn",
+  },
+  {
+    name: "Beaconix",
+    description: "A project of mine. More coming soon.",
+    href: "https://beaconix.app",
+  },
+  {
+    name: "Lettered",
+    description: "A tech blog covering Vue, Git, CSS, and frontend engineering notes.",
+    href: "https://lettered.cn",
+  },
+]

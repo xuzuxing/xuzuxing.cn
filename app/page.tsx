@@ -1,8 +1,6 @@
-import Link from "next/link"
-
 import { DitherCharacter } from "@/components/dither-character"
-import { FlipLogo } from "@/components/flip-logo"
 import { RollingText } from "@/components/rolling-text"
+import { SiteHeader } from "@/components/site-header"
 import { SocialLinks } from "@/components/social-links"
 import { WechatQrPopover } from "@/components/wechat-qr-popover"
 import { siteConfig } from "@/lib/site"
@@ -10,16 +8,8 @@ import { siteConfig } from "@/lib/site"
 export default function Page() {
   return (
     <main className="relative isolate min-h-svh overflow-hidden">
-      {/* Top bar: animated mark. */}
-      <header className="absolute inset-x-0 top-0 z-20 flex items-center px-6 py-5 sm:px-10">
-        <Link
-          href="/"
-          aria-label={`${siteConfig.name}, home`}
-          className="inline-flex items-center rounded-md focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <FlipLogo size={50} color="var(--brand)" mode="auto" />
-        </Link>
-      </header>
+      {/* Top bar: animated mark + primary nav. */}
+      <SiteHeader />
 
       {/* Hero */}
       <section className="mx-auto flex max-w-6xl items-center px-6 pt-28 pb-8 sm:px-10 lg:min-h-svh lg:py-28">
